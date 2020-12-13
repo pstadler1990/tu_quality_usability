@@ -10,7 +10,7 @@ args=("$@")
 INPUT_FILE=${args[0]}
 CUT_NUMBER=${args[1]}
 
-echo "Splitting $INPUT_FILE.src into $CUT_NUMBER files"
+echo "Splitting $INPUT_FILE into $CUT_NUMBER files"
 
 mkdir cut_files
 mkdir cut_files/src

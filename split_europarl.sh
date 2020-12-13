@@ -9,5 +9,5 @@ args=("$@")
 INPUT_FILE=${args[0]}
 OUTPUT_FILE=${args[1]}
 
-awk -F '\t' -v outname="$OUTPUT_FILE" 'BEGIN {file_src=outname ".src.csv"; file_trg=outname ".trg.csv"}; \
+awk -F '\t' -v outname="$OUTPUT_FILE" 'BEGIN {file_src=outname ".src"; file_trg=outname ".trg"}; \
     {print $1 >> file_src; print $2 >> file_trg}' $INPUT_FILE
