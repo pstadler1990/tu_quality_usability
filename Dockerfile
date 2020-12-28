@@ -2,29 +2,24 @@ FROM python:3
 
 MAINTAINER PS "nomail@spam.com"
 
-# Make some dirs for house keeping
-RUN mkdir corpus_training_data
-RUN mkdir corpus_training_data/raw
-RUN mkdir corpus_training_data/split
-RUN mkdir custom_scripts
+# TODO: Create python venv
 
-# Get the required custom scripts
-RUN git clone https://github.com/pstadler1990/tu_quality_usability.git custom_scripts/
+# TODO: Download moses
 
-# Download corpus
-RUN wget -O europarl-v10.de-en.tsv.gz http://www.statmt.org/europarl/v10/training/europarl-v10.de-en.tsv.gz
-RUN gunzip -k europarl-v10.de-en.tsv.gz
-RUN mv europarl-v10.de-en.tsv corpus_training_data/raw
+# Download subword-nmt
+RUN git clone https://github.com/rsennrich/subword-nmt.git
 
-# Split europarl single file into src and trg files
-RUN ./custom_scripts/split_europarl.sh corpus_training_data/raw/europarl-v10.de-en.tsv europarl-v10.de-en-split
-RUN mv europarl-v10.de-en-split.* corpus_training_data/split
+# Install sacrebleu
+RUN pip3 install sacrebleu
 
-# Cut into more, smaller files
-# WORKDIR corpus_training_data/split/
-RUN ./custom_scripts/cut_europarl.sh corpus_training_data/split/europarl-v10.de-en-split 10000
+# Download sockeye conference kit with starter scripts
+RUN git clone https://github.com/awslabs/sockeye.git -b arxiv_1217
+RUN echo "europarl-v10.de-en" > sockeye/arxiv/code/train.en-de.txt
+RUN rm sockeye/arxiv/code/train.lv-en.txt
+RUN mkdir data/en-de/
+# TODO: echo new variables into env.sh (arxiv)
 
-WORKDIR ../../
+
 #RUN pip3 install torch==1.6.0 torchvision==0.7.0
 #RUN pip install torch===1.6.0 torchvision===0.7.0 -f https://download.pytorch.org/whl/torch_stable.html
 RUN pip install torch torchvision torchaudio
