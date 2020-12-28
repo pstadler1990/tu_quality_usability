@@ -2,7 +2,9 @@
 
 set -eu
 
-. env.sh
+echo "Dir: $(dirname $0)"
+
+. $(dirname $0)/env.sh
 
 if [[ ! -d $MOSES ]]; then
     echo "Please set \$MOSES to point to your Moses installation."
@@ -14,30 +16,28 @@ if [[ ! -d $BPE ]]; then
     exit 1
 fi
 
-echo "Dir: $(pwd)"
-
 for pair in en-de; do
     src=$(echo $pair | cut -d- -f1)
     tgt=$(echo $pair | cut -d- -f2)
 
-    [[ ! -d data/$pair ]] && mkdir -p data/$pair
+    [[ ! -d $DATADIR/$pair ]] && mkdir -p $DATADIR/$pair
 
     # Tokenize, normalize
     for lang in $src $tgt; do
 	echo "--> $(cat train.$pair.txt)";
         for prefix in $(cat train.$pair.txt); do
-          cat data/en-de/$prefix.$lang
+          cat $DATADIR/en-de/$prefix.$lang
 	  done | $MOSES/scripts/tokenizer/normalize-punctuation.perl -l $lang \
             | $MOSES/scripts/tokenizer/remove-non-printing-char.perl \
             | $MOSES/scripts/tokenizer/tokenizer.perl -q -no-escape -protected \
-	    $MOSES/scripts/tokenizer/basic-protected-patterns -l $lang > data/$pair/train.tok.$lang &
+	    $MOSES/scripts/tokenizer/basic-protected-patterns -l $lang > $DATADIR/$pair/train.tok.$lang &
     done
 
     echo "Done moses"
 
     wait
 
-    cd data/$pair
+    cd $DATADIR/$pair
 
     echo "Begin training"
 
@@ -60,8 +60,8 @@ for pair in en-de; do
 done
 
 # Download en-de dev and test sets
-sacrebleu -t wmt15 -l en-de --echo src | ./prepare_devtest.sh data/en-de/bpe.model en data/en-de/dev
-sacrebleu -t wmt17 -l en-de --echo src | ./prepare_devtest.sh data/en-de/bpe.model en data/en-de/test
+sacrebleu -t wmt15 -l en-de --echo src | ./prepare_devtest.sh $DATADIR/en-de/bpe.model en $DATADIR/en-de/dev
+sacrebleu -t wmt17 -l en-de --echo src | ./prepare_devtest.sh $DATADIR/en-de/bpe.model en $DATADIR/en-de/test
 
 #./prepare_devtest.sh data/en-de/bpe.model en data/en-de/dev
 #./prepare_devtest.sh data/en-de/bpe.model en data/en-de/test
