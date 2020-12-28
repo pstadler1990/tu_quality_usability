@@ -1,6 +1,8 @@
 #!/bin/bash
 
-. env.sh
+set -eu
+echo "Dir: $(dirname $0)"
+. $(dirname $0)/env.sh
 
 if [[ -z $4 ]]; then
     echo "Usage: cat RAW_FILE | prepare.sh BPE_MODEL LANG PREFIX"
