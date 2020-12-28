@@ -1,1 +1,1 @@
-europarl-v10.de-en
+europarl-v10-500.de-en
