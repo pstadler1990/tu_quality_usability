@@ -3,6 +3,7 @@
 CURDIR=$(pwd)
 
 DATADIR=$CURDIR/../../corpus_training_data
+SCRIPTDIR=$CURDIR
 
 # Set this to the language pair you're processing
 PAIR="en-de"

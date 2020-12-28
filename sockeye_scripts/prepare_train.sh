@@ -33,8 +33,6 @@ for pair in en-de; do
 	    $MOSES/scripts/tokenizer/basic-protected-patterns -l $lang > $DATADIR/$pair/train.tok.$lang &
     done
 
-    echo "Done moses"
-
     wait
 
     cd $DATADIR/$pair
@@ -49,19 +47,19 @@ for pair in en-de; do
 
     echo "Done training"
 
+    echo "Begin apply"
     # Apply BPE
     for ext in $src $tgt; do
         cat train.tok.clean.$ext | $BPE/apply_bpe.py -c bpe.model > train.tok.bpe.$ext
     done
-
     echo "Done apply"
 
-    cd ../..
+#    cd ../..
 done
 
 # Download en-de dev and test sets
-sacrebleu -t wmt15 -l en-de --echo src | ./$(dirname $0)/prepare_devtest.sh $DATADIR/en-de/bpe.model en $DATADIR/en-de/dev
-sacrebleu -t wmt17 -l en-de --echo src | ./$(dirname $0)/prepare_devtest.sh $DATADIR/en-de/bpe.model en $DATADIR/en-de/test
+sacrebleu -t wmt15 -l en-de --echo src | ./$SCRIPTDIR/prepare_devtest.sh $DATADIR/en-de/bpe.model en $DATADIR/en-de/dev
+sacrebleu -t wmt17 -l en-de --echo src | ./$SCRIPTDIR/prepare_devtest.sh $DATADIR/en-de/bpe.model en $DATADIR/en-de/test
 
 #./prepare_devtest.sh data/en-de/bpe.model en data/en-de/dev
 #./prepare_devtest.sh data/en-de/bpe.model en data/en-de/test
