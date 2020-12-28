@@ -60,8 +60,8 @@ for pair in en-de; do
 done
 
 # Download en-de dev and test sets
-sacrebleu -t wmt15 -l en-de --echo src | ./prepare_devtest.sh $DATADIR/en-de/bpe.model en $DATADIR/en-de/dev
-sacrebleu -t wmt17 -l en-de --echo src | ./prepare_devtest.sh $DATADIR/en-de/bpe.model en $DATADIR/en-de/test
+sacrebleu -t wmt15 -l en-de --echo src | ./$(dirname $0)/prepare_devtest.sh $DATADIR/en-de/bpe.model en $DATADIR/en-de/dev
+sacrebleu -t wmt17 -l en-de --echo src | ./$(dirname $0)/prepare_devtest.sh $DATADIR/en-de/bpe.model en $DATADIR/en-de/test
 
 #./prepare_devtest.sh data/en-de/bpe.model en data/en-de/dev
 #./prepare_devtest.sh data/en-de/bpe.model en data/en-de/test
